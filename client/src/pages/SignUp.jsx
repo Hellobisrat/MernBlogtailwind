@@ -1,8 +1,43 @@
-
-import {Link} from 'react-router-dom';
-import { Button, Label, TextInput } from 'flowbite-react';
-export default function Signup() {
+import { useState } from 'react';
+import {Link,useNavigate} from 'react-router-dom';
+import { Alert, Button, Label, TextInput,Spinner } from 'flowbite-react';
+export default function SignUp () {
+  const [formData, SetFormData]= useState({});
+  const [errorMessage, setErrorMessage]=useState(null)
+  const [loading,setLoading] = useState(false)
+  const navigate = useNavigate();
+  const handleChange = (e)=>{
+  
+    SetFormData({...formData,[e.target.id]:e.target.value.trim()})
+  }
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    if(!formData.username || !formData.email || !formData.password){
+      return setErrorMessage('please fill out all fields.')
+    }
+    try {
+    setLoading(true);
+    setErrorMessage(null)
+    const res = await fetch('http://localhost:5000/api/auth/sign-in',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(formData)});
+    const data = await res.json();
+    if(data.success===false){
+      return setErrorMessage(data.message)
+    }
+    setLoading(false);
+    if(res.ok){
+      navigate('/sign-in')
+    }
+    } 
+    catch (error){
+      setErrorMessage(error.message)
+      setLoading(false)
+    }
+  }
   return (
+   
     <div className="min-h-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col
        md:flex-row md:items-center gap-5">
@@ -24,33 +59,39 @@ export default function Signup() {
         </div>
          {/*right*/}
         <div className="flex-1">
-          <form>
+          <form onSubmit={handleSubmit}>
           <div>
           <Label value='your username'/>
           <TextInput
            type='text'
            placeholder='Username'
            className='w-full'
-           id='username'/>
+           id='username'onChange={handleChange}/>
            </div>
            <div>
           <Label value='your email'/>
           <TextInput
-           type='text'
+           type='email'
            placeholder='name@company.com'
            className='w-full'
-           id='email'/>
+           id='email'onChange={handleChange}/>
            </div>
            <div>
           <Label value='your password'/>
           <TextInput
-           type='text'
+           type='password'
            placeholder='Password'
            className='w-full'
-           id='password'/>
+           id='password'onChange={handleChange}/>
            </div>
-           <Button gradientDuoTone='purpleToPink' type='submit'>
-            Sign Up
+           <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
+           {
+            loading?(
+              <><Spinner size='sm'/>
+              <span className='pl-3'>Loading... </span></>
+             
+            ): 'Sign Up'
+           }
            </Button>
           
           </form>
@@ -61,6 +102,11 @@ export default function Signup() {
               Sign In
              </Link>
           </div>
+          {
+            <div>
+             {errorMessage && <Alert className='mt-5' color='failure'>{errorMessage}</Alert>}
+             </div>
+          }
 
         </div>
       </div>
