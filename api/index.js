@@ -1,6 +1,7 @@
 import { log } from 'console';
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
@@ -15,8 +16,9 @@ console.log(`successfully connected`);
 }).catch((e)=>{
 console.log(`not connected`);
 })
-
+app.use(cors())
 const app = express();
+
 app.use(express.json())
 
 app.listen(3000,()=>{
