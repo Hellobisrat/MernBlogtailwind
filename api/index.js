@@ -16,9 +16,9 @@ console.log(`successfully connected`);
 }).catch((e)=>{
 console.log(`not connected`);
 })
-app.use(cors())
-const app = express();
 
+const app = express();
+app.use(cors());
 app.use(express.json())
 
 app.listen(3000,()=>{
