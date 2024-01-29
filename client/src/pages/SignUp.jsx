@@ -18,7 +18,7 @@ export default function SignUp () {
     try {
     setLoading(true);
     setErrorMessage(null)
-    const res = await fetch('http://localhost:5000/api/auth/sign-in',{
+    const res = await fetch('http://localhost:5000/api/auth/signup',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify(formData)});
@@ -48,7 +48,7 @@ export default function SignUp () {
         <span className='px-2 py-1 
         bg-gradient-to-r 
         from-indigo-500 via-purple-500 to-pink-500
-        rounded-lg text-white'>Sahand's</span>
+        rounded-lg text-white'>Bisrat</span>
         Blog
       </Link>
       <p className='text-sm mt-5'>
